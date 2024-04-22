@@ -3,8 +3,8 @@ import requests
 import oauth2
 import json
 
-print('aasdfdsfa')
 bearerToken = os.environ.get("BEARER_TOKEN")
+print(bearerToken)
 
 
 def createUrl(id):
