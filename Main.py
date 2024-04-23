@@ -2,13 +2,15 @@ import os
 import requests
 import oauth2
 import json
+import urllib.request
+from PIL import Image
 
 bearerToken = os.environ.get("BEARER_TOKEN")
 print(bearerToken)
 
 
 def createUrl(id):
-    tweetFields = 'tweet.fields=lang,author_id'
+    tweetFields = 'expansions=attachments.media_keys&media.fields=url'
     url = "https://api.twitter.com/2/users/{}/liked_tweets".format(id)
     return url, tweetFields
 
@@ -31,7 +33,16 @@ def createRequest(url, tweetFields):
 def main():
     url, tweetFields = createUrl('3496145955')
     jsonResponse = createRequest(url, tweetFields)
-    print(json.dumps(jsonResponse, indent=4, sort_keys=True))
+
+    with open('data.json', 'w', encoding='utf-8') as f:
+        json.dump(jsonResponse, f, ensure_ascii=False, indent=4)
+
+    #print(json.dumps(jsonResponse, indent=4, sort_keys=True))
+    #urllib.request.urlretrieve('https://pbs.twimg.com/media/GLxf-LGbUAAQV4E.jpg', '../XLikeScraper/images/asdf.jpg')
+    #img = Image.open('../XLikeScraper/images/asdf.jpg')
+    #img.show()
 
 if __name__ == "__main__":
     main()
+
+    #curl --request GET 'https://api.twitter.com/2/tweets?ids=1263145271946551300&expansions=attachments.media_keys&media.fields=duration_ms,height,media_key,preview_image_url,public_metrics,type,url,width,alt_text' --header 'Authorization: Bearer $BEARER_TOKEN'
