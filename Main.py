@@ -10,7 +10,7 @@ print(bearerToken)
 
 
 def createUrl(id):
-    tweetFields = 'expansions=attachments.media_keys&media.fields=url'
+    tweetFields = 'tweet.fields=id,author_id&expansions=attachments.media_keys&media.fields=url,type'
     url = "https://api.twitter.com/2/users/{}/liked_tweets".format(id)
     return url, tweetFields
 
