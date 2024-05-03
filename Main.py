@@ -4,6 +4,7 @@ import oauth2
 import json
 import urllib.request
 from PIL import Image
+from Tweet import Tweet
 
 bearerToken = os.environ.get("BEARER_TOKEN")
 print(bearerToken)
@@ -31,16 +32,34 @@ def createRequest(url, tweetFields):
     return response.json()
 
 def main():
-    url, tweetFields = createUrl('3496145955')
-    jsonResponse = createRequest(url, tweetFields)
+    print('Begin')
+    #url, tweetFields = createUrl('3496145955')
+    #jsonResponse = createRequest(url, tweetFields)
 
-    with open('data.json', 'w', encoding='utf-8') as f:
-        json.dump(jsonResponse, f, ensure_ascii=False, indent=4)
+    #with open('data.json', 'w', encoding='utf-8') as f:
+    #    json.dump(jsonResponse, f, ensure_ascii=False, indent=4)
 
     #print(json.dumps(jsonResponse, indent=4, sort_keys=True))
     #urllib.request.urlretrieve('https://pbs.twimg.com/media/GLxf-LGbUAAQV4E.jpg', '../XLikeScraper/images/asdf.jpg')
     #img = Image.open('../XLikeScraper/images/asdf.jpg')
     #img.show()
+
+    tweets = []
+    mediaObjects = []
+
+    with open('data.json', 'r', encoding='utf-8') as f:
+        fs = json.load(f)
+        print(fs)
+
+        for t in fs['data']:
+            tweet = Tweet(t)
+            tweets.append(tweet)
+        
+        for m in fs['includes']['media']:
+            media = dict
+
+
+
 
 if __name__ == "__main__":
     main()
