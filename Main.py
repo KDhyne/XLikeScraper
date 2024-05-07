@@ -5,10 +5,9 @@ import json
 import urllib.request
 from PIL import Image
 from Tweet import Tweet
+from TweetMedia import TweetMedia
 
 bearerToken = os.environ.get("BEARER_TOKEN")
-print(bearerToken)
-
 
 def createUrl(id):
     tweetFields = 'tweet.fields=id,author_id&expansions=attachments.media_keys&media.fields=url,type'
@@ -31,6 +30,7 @@ def createRequest(url, tweetFields):
         )
     return response.json()
 
+
 def main():
     print('Begin')
     #url, tweetFields = createUrl('3496145955')
@@ -45,21 +45,33 @@ def main():
     #img.show()
 
     tweets = []
-    mediaObjects = []
+    tweetMediaObjects = []
 
     with open('data.json', 'r', encoding='utf-8') as f:
         fs = json.load(f)
-        print(fs)
 
         for t in fs['data']:
             tweet = Tweet(t)
             tweets.append(tweet)
-        
+            if len(tweets) > 14:
+                break
+
         for m in fs['includes']['media']:
-            media = dict
+            media = TweetMedia(m)
+            print('running {}'.format(media.mediaKey))
+            tweetMediaObjects.append(media)
 
+        tweet: Tweet
+        for tweet in tweets:
+            for key in tweet.mediaKeys:
+                m = list(filter(lambda x: x.mediaKey == key, tweetMediaObjects))[0]
+                tweet.mediaObjects.append(m)
 
-
+        t : Tweet
+        m : TweetMedia
+        for t in tweets:
+            for m in t.mediaObjects:
+                urllib.request.urlretrieve(m.url, '../XLikeScraper/images/{}.jpg'.format(m.mediaKey))
 
 if __name__ == "__main__":
     main()
